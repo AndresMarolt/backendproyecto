@@ -7,21 +7,30 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/api/productos" method="POST">
-        <h3>PRODUCTO</h3>
-        <label>Nombre</label>
-        <input type="text" name="title">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+    <script>
 
-        <label>Precio</label>
-        <input type="number" name="price">
+        const template = Handlebars.compile(`
+            <h1>Datos Personales</h1>
+            <ul>
+                <li>{{nombre}}</li>
+                <li>{{apellido}}</li>
+                <li>{{edad}}</li>
+                <li>{{email}}</li>
+                <li>{{telefono}}</li>
+            </ul>
+        `)
 
-        <label>Thumbnail</label>
-        <input type="text" name="thumbnail">
+        const html = template({
+            nombre: "Andrés", 
+            apellido: "Marolt",
+            edad: 27,
+            email: "andresmmarolt@gmail.com",
+            telefono: 1138940402
+        });
+        document.querySelector('body').innerHTML = html;
 
-        <br>
-        <br>
-
-        <input type="submit" value="Enviar">
-    </form>
+    </script>
 </body>
 </html>

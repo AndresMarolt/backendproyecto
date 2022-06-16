@@ -1,0 +1,13 @@
+{{> nav}}               {{!-- ASI SE IMPORTA nav.hbs --}}
+
+{{#if hasAny}}
+    <ul>
+        {{#each champs}}
+            <li>
+                Nombre: {{this.name}} 
+                <br>
+                Apellido: {{this.surName}}
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}
