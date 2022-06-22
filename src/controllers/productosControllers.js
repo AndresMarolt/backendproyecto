@@ -1,16 +1,6 @@
 class Contenedor {
     constructor() {
-        this.productos = [{
-            title: 'Remera',
-            price: 1500,
-            thumbnail: 'asdasd'
-        },
-        {
-            title: 'Buzo',
-            price: 2500,
-            thumbnail: 'fghfgh'
-        }
-        ];
+        this.productos = [];
     }
 
     obtenerProductos() {
@@ -25,14 +15,12 @@ class Contenedor {
 
 const prodContenedor = new Contenedor();
 
-const productos = [];
-
 const getForm = (req, res) => {
     console.log(prodContenedor.productos);
     res.render('main');
 }
 
-const postForm = async (req, res) => {
+const postForm = (req, res) => {
     const {title, price, thumbnail} = req.body;
     prodContenedor.añadirProducto(title, price, thumbnail);
     res.statusCode(201);
