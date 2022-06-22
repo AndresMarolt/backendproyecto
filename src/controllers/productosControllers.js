@@ -1,17 +1,55 @@
+class Contenedor {
+    constructor() {
+        this.productos = [{
+            title: 'Remera',
+            price: 1500,
+            thumbnail: 'asdasd'
+        },
+        {
+            title: 'Buzo',
+            price: 2500,
+            thumbnail: 'fghfgh'
+        }
+        ];
+    }
+
+    obtenerProductos() {
+        return this.productos;
+    }
+
+    añadirProducto(title, price, thumbnail) {
+        let id = this.productos.length + 1;
+        this.productos.push({id, title, price, thumbnail});
+    }
+}
+
+const prodContenedor = new Contenedor();
+
 const productos = [];
 
+const getForm = (req, res) => {
+    console.log(prodContenedor.productos);
+    res.render('main');
+}
+
+const postForm = async (req, res) => {
+    const {title, price, thumbnail} = req.body;
+    prodContenedor.añadirProducto(title, price, thumbnail);
+    res.statusCode(201);
+}
+
 const getProductos = (req, res) => {
-    res.render('main.hbs', { productos })
+    const prods = prodContenedor.obtenerProductos();
+    res.render('productos.hbs', {prods, hasAny: true});
 }
 
 const postProductos = (req, res) => {
-    const { title, price, thumbnail } = req.body;
-    const producto = { title: title, price: price, thumbnail: thumbnail}
-    productos.push(persona);
-    res.redirect('/productos')
+    res.sendStatus(201);
 }
 
 module.exports = {
     getProductos,
-    postProductos
+    postProductos,
+    getForm,
+    postForm
 }
