@@ -1,0 +1,13 @@
+<h1 class="text-primary text-center">Productos</h1>
+
+{{#if hasAny}}
+    <ul class="w-75 mx-auto list-unstyled">
+        {{#each prods}}
+            <li class="border-bottom border-primary border-3">
+                <span class="fw-bold">Producto:</span> {{this.title}} <br>
+                <span class="fw-bold">Precio:</span> {{this.price}} <br>
+                <span class="fw-bold">Thumbnail:</span> {{this.thumbnail}} <br>
+            </li>
+        {{/each}}
+    </ul>
+{{/if}}
