@@ -21,5 +21,10 @@ html(lang="en")
                             p #{prod.price}
 
                             span(class="fw-bold") Thumbnail: 
-                            p #{prod.thumbnail}
+                            img(src=prod.thumbnail, alt="")
+            else
+                p(class="text-center mt-5 fw-bold" style="font-size: 20px") No hay productos
+
+            <a href="/" class="my-3 text-decoration-none text-primary fw-bold d-block text-center">Ir a Ingreso de productos</a>
+            
         

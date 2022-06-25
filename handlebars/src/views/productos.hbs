@@ -6,8 +6,14 @@
             <li class="border-bottom border-primary border-3">
                 <span class="fw-bold">Producto:</span> {{this.title}} <br>
                 <span class="fw-bold">Precio:</span> {{this.price}} <br>
-                <span class="fw-bold">Thumbnail:</span> {{this.thumbnail}} <br>
+                <span class="fw-bold">Thumbnail: <img src={{this.thumbnail}} alt=""> <br>
             </li>
         {{/each}}
     </ul>
+{{else}}
+    <p class="text-center mt-5 fw-bold" style="font-size: 20px">No hay productos</p>
 {{/if}}
+
+<a href="/" class="my-3 text-decoration-none text-primary fw-bold d-block text-center">Ir a Ingreso de productos</a>
+
+
