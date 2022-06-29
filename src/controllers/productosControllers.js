@@ -32,7 +32,7 @@ const postProductos = (req, res) => {
     const {title, price, thumbnail} = req.body;
     // console.log(req.body);
     prodContenedor.añadirProducto(title, price, thumbnail);
-    res.redirect('/productos');
+    // res.redirect('/productos');
 }
 
 const getProductos = (req, res) => {
