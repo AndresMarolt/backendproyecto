@@ -1,0 +1,17 @@
+const socket = io();
+
+
+const renderProducts = async products => {
+    const response = await fetch('/plantilla.hbs')        // FETCH DEVUELVE UNA PROMESA
+    const plantilla = await response.text()
+    products.forEach(product => {
+        const template = Handlebars.compile(plantilla)      // COMPILA LA PLANTILLA
+        const html = template(product);
+        document.querySelector('#productos').innerHTML += html;
+    });
+}
+
+socket.on('server:products', products => {
+    renderProducts(products);
+})
+
