@@ -2,14 +2,14 @@
   "name": "nueva-carpeta",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon ./src/server.js",
+    "start": "nodemon ./server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://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@github.com/AndresMarolt/backendproyecto.git"
+    "url": "git+https://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@github.com/AndresMarolt/backendproyecto.git"
   },
   "author": "",
   "license": "ISC",

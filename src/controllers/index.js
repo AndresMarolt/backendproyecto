@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const pathProductos = path.join(__dirname, '../src/productos');
-const pathCarritos = path.join(__dirname, '../src/carritos');
-
+const pathProductos = path.join(__dirname, '../persistenceTextFiles/productos');
+const pathCarritos = path.join(__dirname, '../persistenceTextFiles/carritos');
 
 const adminMiddleware = (req, res, next) => {
     const rol = true;
