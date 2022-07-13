@@ -1,21 +1,47 @@
-require('dotenv').config();
+const fs = require('fs');
 const express = require('express');
 const app = express();
-const port = process.env.PORT;
+const port = 8080;
 const path = require('path');
-
-// SOCKET.io CONFIG:
+// WEBSOCKET CONFIG:
 const {Server: IOServer} = require('socket.io');
-const expressServer = app.listen(port, err => {
-    err ? console.log(`There was an error when itializing server: ${err}`) : console.log(`Server listening to port ${port}`);
+const expressServer = app.listen(port, (err) => {
+    err ? console.log(`Hubo un error al inicializar el servidor: ${err}`) : console.log(`Servidor escuchando a puerto ${port}`)
 })
 const io = new IOServer(expressServer);
-const products = [{title: 'Lapiz', price: 1500, thumbnail: 'https://www.faber-castell.com.ar/-/media/Products/Product-Repository/CASTELL-9000/24-24-01-Pencil/119003-Graphite-pencil-CASTELL-9000-3B/Images/119003_0_PM99.ashx?bc=ffffff&w=273&h=290&as=0&la=es-AR&hash=C37AA24F6CC9EDB168050B31DB8473925C20E37E'}]
+const products = [];
+const messages = [];
 
-app.use(express.static(path.join(__dirname, '../public')))
+// DIRECTORIO DE ARCHIVOS ESTATICOS:
+app.use(express.static(path.join(__dirname, '../public')));
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
+// ARCHIVO CON CHATS
+const saveFile = async messages => {
+    try {
+        let chats = JSON.stringify(messages);
+        await fs.promises.writeFile(`./chats`, chats);
+    } catch(error) {
+        console.log(error);              
+    }
+}
+// WEBSOCKET:
 io.on('connection', socket => {
-    console.log(`Se conectó un usuario nuevo`);
+    console.log("Se conectó un usuario nuevo");
+    io.emit('server:products', products);
+    
+    socket.on('client:product', productData => {            // ATAJA EL PRODUCTO ENVIADO DESDE EL CLIENTE
+        products.push(productData);                         // ACTUALIZA EL ARRAY DE PRODUCTOS
+        io.emit('server:products', products)                           // ENVIA AL CLIENTE EL ARRAY ACTUALIZADO
+    })
 
-    socket.emit('server:products', products)
+    io.emit('server:messages', messages);
+    socket.on('client:message', messageData => {
+        messages.push(messageData);
+        saveFile(messages);
+        io.emit('server:messages', messages);
+    })
 })
+
