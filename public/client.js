@@ -11,7 +11,7 @@ const containerHeading = document.querySelector('#tableHeading');
 const formChat = document.querySelector('#form-chat');
 const emailInput = document.querySelector('#email')
 const mensajeInput = document.querySelector('#mensaje')
-const chatCotainer = document.querySelector('#chat-container');
+const chatContainer = document.querySelector('#chat-container');
 
 
 const renderProducts = async products => {
@@ -96,3 +96,4 @@ formChat.addEventListener('submit', event => {
     sendMessage();
     mensaje.value = "";
 })
+
