@@ -1,9 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 const path = require('path');
 const { createProdTable, createChatTable } = require('./src/createTables');
 const { productDatabase, chatDatabase } = require('./src/ddbb');
+const databaseHandler = require('./src/controllers/index');
+
+const ddbbHandlerProd = new databaseHandler(productDatabase, 'product');
+const ddbbHandlerMsg = new databaseHandler(chatDatabase, 'chat');
 
 // WEBSOCKET CONFIG:
 const {Server: IOServer} = require('socket.io');
@@ -19,35 +24,28 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-
-const addElement = async (ddbb, table, element) => {
-    try {
-        await ddbb(table).insert(element);
-        console.log('Agregado a la tabla');
-        ddbb.destroy();
-    } catch(err) {
-        console.log(err);
-        ddbb.destroy();
-    }
-}
-
-
 // WEBSOCKET:
-io.on('connection', socket => {
-    console.log("Se conectó un usuario nuevo");
+io.on('connection', async socket => {
+    // console.log("Se conectó un usuario nuevo");
     
-    io.emit('server:products');                                 // Ejecuta el evento 'server:products', con lo cual el cliente renderiza los productos que haya en bbdd
-    socket.on('client:product', productData => {                // El servidor escucha al evento 'client:product' y cuando ocurre hace lo siguiente:
-        createProdTable(productDatabase(), 'product');            // Crea una tabla 'product' si esta no existía antes
-        addElement(productDatabase(), 'product', productData);    // Añade el elemento recibido
-        io.emit('server:products');
+    await createProdTable(productDatabase, 'product');            // CREA LA TABLA DE PRODUCTOS SI ESTA NO EXISTIA
+    let prods = await ddbbHandlerProd.getAll();                   // SE TRAEN TODOS LOS PRODUCTOS DE LA TABLA
+
+    await createChatTable(chatDatabase, 'chat');                  // CREA LA TABLA DE CHATS SI ESTA NO EXISTIA
+    let chat = await ddbbHandlerMsg.getAll();                     // SE TRAEN TODOS LOS CHATS DE LA TABLA
+
+    io.emit('server:products', prods);                            // AL ESTABLECERSE LA CONEXION SE LE ENVIAN AL CLIENTE LOS PRODUCTOS QUE HAYA EN LA BBDD
+    socket.on('client:product', async productData => {              
+        await ddbbHandlerProd.save(productData);                  // CUANDO EL CLIENTE LE ENVIA AL SERVIDOR UN NUEVO PRODUCTO DESDE EL SERVIDOR SE LO GUARDA EN LA BBDD
+        prods = await ddbbHandlerProd.getAll();                   // SE ESPERA A QUE SE TRAIGAN TODOS LOS PRODUCTOS DE LA BBDD Y SE LOS ALMACENA EN UNA VARIABLE  
+        io.emit('server:products', prods);                        // SE ENVIA AL CLIENTE LA VARIABLE CONTENEDORA DE TODOS LOS PRODUCTOS PARA QUE SE RENDERICEN
     })
     
-    io.emit('server:messages');
-    socket.on('client:message', messageData => {
-        createChatTable(chatDatabase, 'chat');
-        addElement(chatDatabase, 'chat', messageData)
-        io.emit('server:messages');
+    io.emit('server:messages', chat);
+    socket.on('client:message', async messageData => {
+        await ddbbHandlerMsg.save(messageData);
+        chat = await ddbbHandlerMsg.getAll();
+        io.emit('server:messages', chat);
     })
 })
 
