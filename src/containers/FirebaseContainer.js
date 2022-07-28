@@ -16,12 +16,16 @@ class FirebaseContainer {
         try {
             if(id) {
                 const doc = await this.collection.doc(id).get();
-                const data = doc.data();
+                let data = doc.data();
                 return { ...data, id };     // RETORNA UN OBJETO QUE TIENE TODA LA INFORMACION DE DATA Y EL ID
             } else {
+                const allProds = [];
                 const docsSnapshot = await this.collection.get();
-                const docs = docsSnapshot.docs;
-                return docs;
+                docsSnapshot.forEach(doc => {
+                    let data = doc.data();
+                    allProds.push({id: doc.id, ...data});
+                })
+                return allProds;
             }
         } catch(err) {
             console.log(err);
