@@ -11,22 +11,34 @@ class FirebaseCartDao extends FirebaseContainer {
             const cart = await this.collection.doc(cartId).get();
             let cartData = cart.data();
             let cartObj = {id: cartId, ...cartData}
-
-            console.log(cartObj);
-
+            
             const cartProducts = cartObj.products;
-            console.log(cartProducts);
+            
 
-
+            return cartProducts;
         } catch(err) {
             console.log(err);
         }
     }
 
     async addCartProduct(cartId, product) {
-        await this.collection.doc(cartId).update({
-            products: admin.firestore.FieldValue.arrayUnion(product)
-        })
+        try {
+            await this.collection.doc(cartId).update({
+                products: admin.firestore.FieldValue.arrayUnion(product)
+            })
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    async deleteCartProd(cartId, product) {
+        try {
+            await this.collection.doc(cartId).update({
+                products: admin.firestore.FieldValue.arrayRemove(product)
+            })
+        } catch(err) {
+            console.log(err);
+        }
     }
 }
 

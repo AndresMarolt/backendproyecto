@@ -6,7 +6,6 @@ let CartDao
 
 switch (process.env.DATABASE) {
     case 'firebase':
-        console.log("FIREBASE");
         const { default: FirebaseProductDao } = await import('./products/FirebaseProductDao.js');
         const { default: FirebaseCartDao } = await import('./carts/FirebaseCartDao.js')
         ProductDao = FirebaseProductDao;
@@ -14,7 +13,6 @@ switch (process.env.DATABASE) {
         break;
 
     case 'mongodb':
-        console.log("MONGODB");
         const { default: MongodbProductDao } = await import('./products/MongodbProductDao.js');
         const { default: MongodbCartDao } = await import('./carts/MongodbCartDao.js');
         ProductDao = MongodbProductDao;

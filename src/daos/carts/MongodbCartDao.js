@@ -22,16 +22,22 @@ class MongodbCartDao extends MongodbContainer {
     async getProducts(cartId) {
         try {
             let cart = await this.collection.find({_id: cartId}, {__v: 0, _id: 0, timestamp: 0});
-            console.log(cart);
-
-            return cart;
+            return cart[0].products;
         } catch(err) {
             console.log(err);
         }
     }
-
-    async deleteCartProd(cartId, prodId) {
-        const cart = await this.getProducts(cartId);
+    
+    async deleteCartProd(cartId, product) {
+        try {
+            await this.collection.updateMany({id: cartId}, {
+                $pullAll: { 
+                    products: [{id: product[0].id}] 
+                }
+            })
+        } catch(err) {
+            console.log(err);
+        } 
     }
 }
 

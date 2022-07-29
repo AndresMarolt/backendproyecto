@@ -88,7 +88,7 @@ const addCartProduct = async (req, res) => {
     try {
         const cartId = req.params.id;
         const productToAdd = await productHandler.get(req.body.id);
-        await cartHandler.addCartProduct(cartId, ...productToAdd);
+        await cartHandler.addCartProduct(cartId, productToAdd);
         res.status(200).json('Producto agregado al carrito exitosamente');
     } catch(err) {
         res.status(502).json({error: 502, descripcion: `${err}`});
@@ -100,11 +100,15 @@ const deleteCartProduct = async (req, res) => {
         const cartId = req.params.id;
         const prodId = req.params.id_prod;
 
-        await cartHandler.deleteCartProd(cartId, prodId);
+        const product = await productHandler.get(prodId);
+
+        await cartHandler.deleteCartProd(cartId, product);
         res.status(200).json('Eliminado exitosamente');
     } catch(err) {
         res.status(502).json({error: 502, descripcion: `${err}`});
     }
 }
+
+
 
 export default {getProduct, addProduct, updateProduct, deleteProduct, createCart, deleteCart, getCartProducts, addCartProduct, deleteCartProduct}

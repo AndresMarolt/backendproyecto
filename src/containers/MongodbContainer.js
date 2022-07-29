@@ -19,6 +19,7 @@ class MongodbContainer {
                 doc = await this.collection.find({_id: id}, {__v: 0});
             } else {
                 doc = await this.collection.find();
+                console.log(doc);
             }
             return doc;
         } catch(err) {
