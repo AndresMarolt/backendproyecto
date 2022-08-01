@@ -10,9 +10,8 @@ class MongodbCartDao extends MongodbContainer {
 
     async addCartProduct(cartId, product) {
         try {
-            const data = {...product};
             await this.collection.updateOne({_id: cartId}, {
-                $push: {products: data}
+                $push: {products: product}
             });
         } catch(err) {
             console.log(err);
@@ -28,13 +27,14 @@ class MongodbCartDao extends MongodbContainer {
         }
     }
     
-    async deleteCartProd(cartId, product) {
+    async deleteCartProd(cartId, prodId) {
         try {
-            await this.collection.updateMany({id: cartId}, {
-                $pullAll: { 
-                    products: [{id: product[0].id}] 
+            let deletedProd = await this.collection.findByIdAndUpdate(cartId, {
+                $pull: {
+                    products: {id: prodId}
                 }
-            })
+            });
+            return deletedProd;
         } catch(err) {
             console.log(err);
         } 
